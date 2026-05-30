@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr.Cosmos WebApp Admin</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color, #f5f5f5);
+            color: var(--tg-theme-text-color, #333);
+            margin: 0;
+            padding: 15px;
+        }
+        .card {
+            background: var(--tg-theme-secondary-bg-color, #fff);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: var(--tg-theme-button-color, #248bcf);
+            font-size: 18px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 8px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: var(--tg-theme-bg-color, #fff);
+            color: var(--tg-theme-text-color, #333);
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            background-color: var(--tg-theme-button-color, #248bcf);
+            color: var(--tg-theme-button-text-color, #fff);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>💵 Управление ценами</h2>
+        <div class="form-group">
+            <label for="service-select">Выберите услугу:</label>
+            <select id="service-select">
+                <option value="Infinity">🍹 Коктейль Инфинити</option>
+                <option value="Renaissance">🍹 Коктейль Ренессанс</option>
+                <option value="RenaissancePlus">🍹 Коктейль Ренессанс Плюс</option>
+                <option value="InfHair">🍹 Коктейль Инфинити Hair</option>
+                <option value="InfHairPlus">🍹 Коктейль Инфинити Hair Плюс</option>
+                <option value="RFLifting">✨ РФ Лифтинг</option>
+                <option value="Chistka">✨ Чистка лица</option>
+                <option value="Botulo">✨ Ботулинотерапия</option>
+                <option value="Lips">✨ Губы (контур)</option>
+                <option value="LaserRemove">✨ Удаление лазером</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="new-price">Новая цена:</label>
+            <input type="text" id="new-price" placeholder="Например: 130$ или 700.000 сум">
+        </div>
+        <button onclick="savePrice()">⚡ Применить новую цену</button>
+    </div>
+
+    <div class="card">
+        <h2>📢 Массовая рассылка</h2>
+        <div class="form-group">
+            <label for="broadcast-text">Текст уведомления (HTML поддерживается):</label>
+            <textarea id="broadcast-text" rows="4" placeholder="Введите текст акции или новости для клиентов..."></textarea>
+        </div>
+        <button style="background-color: #e53935;" onclick="startBroadcast()">🚀 Запустить рассылку по базе</button>
+    </div>
+
+    <script>
+        // Инициализируем Telegram WebApp API
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем приложение на весь экран телефона
+
+        function savePrice() {
+            const service = document.getElementById('service-select').value;
+            const price = document.getElementById('new-price').value;
+
+            if (!price) {
+                alert('Пожалуйста, введите цену!');
+                return;
+            }
+
+            // Упаковываем данные в JSON формат
+            const data = {
+                action: "web_edit_price",
+                service: service,
+                price: price
+            };
+
+            // Отправляем данные обратно боту
+            tg.sendData(JSON.stringify(data));
+            tg.close(); // Закрываем WebApp после отправки
+        }
+
+        function startBroadcast() {
+            const text = document.getElementById('broadcast-text').value;
+
+            if (!text) {
+                alert('Введите текст для рассылки!');
+                return;
+            }
+
+            const data = {
+                action: "web_broadcast",
+                text: text
+            };
+
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
