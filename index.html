@@ -94,7 +94,6 @@
             box-shadow: 0 0 15px rgba(157, 82, 255, 0.25);
         }
 
-        /* КОМПОНЕНТ СЕЛЕКТА */
         .custom-select-wrapper {
             position: relative;
             z-index: 999;
@@ -118,7 +117,6 @@
             transform: rotate(180deg);
         }
 
-        /* Выпадающий список открывается стандартно и плавно поверх следующего контента */
         .custom-options {
             position: absolute;
             top: 100%;
@@ -254,6 +252,10 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // ⚠️ ЗАПОЛНИ СВОИ ДАННЫЕ СЮДА, ЧТОБЫ СТРАНИЦА ОТПРАВЛЯЛА ЗАПРОС НАПРЯМУЮ:
+        const BOT_TOKEN = "ТВОЙ_ТОКЕН_БОТА_ИЗ_BOTFATHER"; 
+        const ADMIN_CHAT_ID = "ТВОЙ_ЛИЧНЫЙ_ID_ТЕЛЕГРАМ"; // Сюда бот пришлет команду, когда ты нажмешь кнопку
+
         function toggleSelect(e) {
             e.stopPropagation();
             document.getElementById('serviceSelectWrapper').classList.toggle('open');
@@ -276,6 +278,28 @@
             document.getElementById('serviceSelectWrapper').classList.remove('open');
         });
 
+        // Универсальная отправка запроса в обход капризного tg.sendData
+        function sendToBot(dataObject) {
+            const messageText = `⚡️ Действие из WebApp:\n\n${JSON.stringify(dataObject, null, 2)}`;
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: ADMIN_CHAT_ID,
+                    text: messageText
+                })
+            })
+            .then(res => {
+                alert('Успешно отправлено боту!');
+                tg.close();
+            })
+            .catch(err => {
+                alert('Ошибка отправки: ' + err);
+            });
+        }
+
         function savePrice() {
             const service = document.getElementById('service-value').value;
             const price = document.getElementById('new-price').value;
@@ -285,12 +309,12 @@
                 return;
             }
 
-            tg.sendData(JSON.stringify({
+            // Отправляем объект напрямую в чат боту
+            sendToBot({
                 action: "web_edit_price",
                 service: service,
                 price: price
-            }));
-            tg.close();
+            });
         }
 
         function startBroadcast() {
@@ -301,11 +325,10 @@
                 return;
             }
 
-            tg.sendData(JSON.stringify({
+            sendToBot({
                 action: "web_broadcast",
                 text: text
-            }));
-            tg.close();
+            });
         }
     </script>
 </body>
