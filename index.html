@@ -18,7 +18,7 @@
             background-attachment: fixed;
             color: #ffffff;
             margin: 0;
-            padding: 20px 15px 120px 15px; /* Увеличили отступ снизу */
+            padding: 20px 15px 140px 15px; /* Увеличили отступ, чтобы контент не перекрывался кнопкой */
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
@@ -143,7 +143,7 @@
             stroke: #cdb0ff;
         }
 
-        /* Выпадающий список с повышенным z-index и плотным фоном */
+        /* РЕШЕНИЕ ПРОБЛЕМЫ: Выпадающий список теперь ПОВЕРХ вкладки рассылки (z-index: 99999) */
         .custom-options {
             position: absolute;
             display: block;
@@ -151,17 +151,17 @@
             left: 0;
             right: 0;
             margin-top: 6px;
-            background: #140e20; /* Сделали непрозрачным, чтобы не просвечивал нижний контент */
+            background: #150f22; /* Плотный темный фон, чтобы ничего не просвечивало */
             border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
-            z-index: 9999; /* Поверх абсолютно всего на экране! */
-            max-height: 250px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+            z-index: 99999; /* Выше, чем фиксированная кнопка рассылки */
+            max-height: 280px;
             overflow-y: auto;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .custom-select-wrapper.open .custom-options {
             opacity: 1;
@@ -197,7 +197,7 @@
             border-radius: 10px;
         }
 
-        /* Кнопки */
+        /* Стандартные кнопки */
         button {
             width: 100%;
             background: rgba(157, 82, 255, 0.15);
@@ -224,15 +224,15 @@
             border-color: rgba(157, 82, 255, 0.6);
         }
 
-        /* Нижний контейнер с кнопкой рассылки */
+        /* ФИКСИРОВАННАЯ НИЖНЯЯ ВКЛАДКА (z-index меньше, чем у списка меню) */
         .bottom-action-container {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 20px 15px;
-            background: linear-gradient(to top, #0b0713 80%, transparent);
-            z-index: 500; /* Меньше, чем у раскрытого селекта */
+            padding: 20px 15px 30px 15px;
+            background: linear-gradient(to top, #0b0713 85%, transparent);
+            z-index: 1000; /* Меньше, чем 99999 у custom-options */
         }
         .broadcast-btn {
             background: rgba(239, 68, 68, 0.12);
@@ -283,17 +283,15 @@
                     <div class="custom-option" data-value="InfHair" onclick="selectOption(this)">🍹 Коктейль Инфинити Hair</div>
                     <div class="custom-option" data-value="InfHairPlus" onclick="selectOption(this)">🍹 Коктейль Инфинити Hair Плюс</div>
                     
-                    <div class="custom-option" data-value="Botulo" onclick="selectOption(this)">💉 Ботулинотерапия</div>
-                    <div class="custom-option" data-value="Lips" onclick="selectOption(this)">💉 Губы (контур)</div>
-                    <div class="custom-option" data-value="Biorevit" onclick="selectOption(this)">💉 Биоревитализация</div>
-                    <div class="custom-option" data-value="MezoFace" onclick="selectOption(this)">💉 Мезотерапия лица</div>
-                    
-                    <div class="custom-option" data-value="MezoNiti" onclick="selectOption(this)">🧵 Мезонити (Тредлифтинг)</div>
-                    <div class="custom-option" data-value="NitiAptos" onclick="selectOption(this)">🧵 Нитевой лифтинг Aptos</div>
-
+                    <div class="custom-option" data-value="Botulo" onclick="selectOption(this)">✨ Ботулинотерапия</div>
+                    <div class="custom-option" data-value="Lips" onclick="selectOption(this)">✨ Губы (контур)</div>
                     <div class="custom-option" data-value="RFLifting" onclick="selectOption(this)">✨ РФ Лифтинг</div>
                     <div class="custom-option" data-value="Chistka" onclick="selectOption(this)">✨ Чистка лица</div>
                     <div class="custom-option" data-value="LaserRemove" onclick="selectOption(this)">✨ Удаление лазером</div>
+
+                    <div class="custom-option" data-value="Niti_1" onclick="selectOption(this)">🧵 Твои Нити Вариант 1</div>
+                    <div class="custom-option" data-value="Niti_2" onclick="selectOption(this)">🧵 Твои Нити Вариант 2</div>
+                    <div class="custom-option" data-value="Inject_1" onclick="selectOption(this)">💉 Твои Инъекции Вариант 1</div>
                 </div>
             </div>
             <input type="hidden" id="service-value" value="Infinity">
