@@ -4,317 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dr.Cosmos WebApp Admin</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #0b0713;
-            background-image: 
-                radial-gradient(circle at top left, rgba(136, 51, 255, 0.15), transparent 40%),
-                radial-gradient(circle at bottom right, rgba(161, 75, 255, 0.1), transparent 50%);
-            background-attachment: fixed;
-            color: #ffffff;
-            margin: 0;
-            padding: 20px 15px 130px 15px;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+        body { background-color: #0b0713; color: #ffffff; font-family: sans-serif; padding: 20px; }
+        .card { background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 20px; margin-bottom: 20px; position: relative; }
+        
+        /* Список услуг - делаем его «липким» и самым верхним */
+        .custom-select-wrapper { position: relative; z-index: 9999; }
+        .custom-select-trigger { background: #1a1429; padding: 15px; border-radius: 12px; cursor: pointer; border: 1px solid #444; }
+        
+        .custom-options { 
+            position: absolute; top: 100%; left: 0; right: 0; 
+            background: #251d38; border-radius: 12px; margin-top: 5px;
+            display: none; /* Скрыт по умолчанию */
+            border: 1px solid #777;
+            max-height: 300px; overflow-y: auto;
         }
-
-        .app-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 25px;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .app-header-title {
-            margin: 0;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 22px;
-            padding: 22px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        h2 {
-            margin-top: 0;
-            color: #cdb0ff;
-            font-size: 16px;
-            font-weight: 600;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-            position: relative;
-        }
-        label {
-            display: block;
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(0, 0, 0, 0.3);
-            color: #ffffff;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-        }
-        input:focus, textarea:focus {
-            border-color: #9d52ff;
-            outline: none;
-            box-shadow: 0 0 15px rgba(157, 82, 255, 0.25);
-        }
-
-        .custom-select-wrapper {
-            position: relative;
-        }
-        .custom-select-trigger {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.3);
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .custom-select-wrapper.open .custom-select-trigger {
-            border-color: #9d52ff;
-        }
-        .arrow-icon {
-            transition: transform 0.2s ease;
-            stroke: rgba(255,255,255,0.6);
-        }
-        .custom-select-wrapper.open .arrow-icon {
-            transform: rotate(180deg);
-        }
-
-        /* ТЕПЕРЬ СПИСОК СТОИТ В BODY И ПЕРЕКРЫВАЕТ ВСЁ НА СВЕТЕ */
-        .custom-options {
-            position: absolute;
-            background: #161124; /* Плотный не прозрачный фон */
-            border-radius: 16px;
-            border: 1px solid rgba(157, 82, 255, 0.5);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
-            z-index: 999999999 !important; /* Максимальный приоритет */
-            max-height: 240px;
-            overflow-y: auto;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-8px);
-            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-            box-sizing: border-box;
-        }
-        .custom-select-wrapper.open-global .custom-options {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        .custom-option {
-            padding: 14px 16px;
-            cursor: pointer;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .custom-option:hover {
-            background: rgba(157, 82, 255, 0.25);
-            color: #ffffff;
-        }
-        .custom-option.selected {
-            background: rgba(157, 82, 255, 0.4);
-            color: #cdb0ff;
-            font-weight: 600;
-        }
-
-        .custom-options::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-options::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-        }
-
-        button {
-            width: 100%;
-            background: rgba(157, 82, 255, 0.2);
-            color: #ffffff;
-            border: 1px solid rgba(157, 82, 255, 0.4);
-            padding: 15px;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-        button:active {
-            transform: scale(0.97);
-        }
-
-        .bottom-action-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 15px 30px 15px;
-            background: linear-gradient(to top, #0b0713 85%, transparent);
-            z-index: 1000;
-        }
-        .broadcast-btn {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-        }
+        .custom-options.show { display: block; }
+        .custom-option { padding: 15px; border-bottom: 1px solid #333; cursor: pointer; }
+        
+        /* Рассылка - убираем любые настройки наложения */
+        .broadcast-card { position: relative; z-index: 1; }
+        button { width: 100%; padding: 15px; background: #8833ff; color: #fff; border: none; border-radius: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="app-header">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cdb0ff" stroke-width="2">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-        </svg>
-        <p class="app-header-title">Управление Студией Dr.Cosmos</p>
-    </div>
-
     <div class="card">
-        <h2>Управление ценами</h2>
-        <div class="form-group">
-            <label>Выберите услугу:</label>
-            <div class="custom-select-wrapper" id="serviceSelectWrapper">
-                <div class="custom-select-trigger" onclick="toggleSelect(event)">
-                    <span id="selectedLabel">🍹 Коктейль Инфинити</span>
-                    <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </div>
-                
-                <div class="custom-options" id="customOptions">
-                    <div class="custom-option selected" data-value="Infinity" onclick="selectOption(this)">🍹 Коктейль Инфинити</div>
-                    <div class="custom-option" data-value="Renaissance" onclick="selectOption(this)">🍹 Коктейль Ренессанс</div>
-                    <div class="custom-option" data-value="RenaissancePlus" onclick="selectOption(this)">🍹 Коктейль Ренессанс Плюс</div>
-                    <div class="custom-option" data-value="InfHair" onclick="selectOption(this)">🍹 Коктейль Инфинити Hair</div>
-                    <div class="custom-option" data-value="InfHairPlus" onclick="selectOption(this)">🍹 Коктейль Инфинити Hair Плюс</div>
-                    
-                    <div class="custom-option" data-value="Mono" onclick="selectOption(this)">🧵 Моно нити</div>
-                    <div class="custom-option" data-value="Screw" onclick="selectOption(this)">🧵 Скрю нити</div>
-                    <div class="custom-option" data-value="PLLA" onclick="selectOption(this)">🧵 Кислота PLLA</div>
-                    <div class="custom-option" data-value="Liquid" onclick="selectOption(this)">🧵 Жидкие нити</div>
-                    
-                    <div class="custom-option" data-value="Botulo" onclick="selectOption(this)">✨ Ботулинотерапия</div>
-                    <div class="custom-option" data-value="Lips" onclick="selectOption(this)">✨ Губы (контур)</div>
-                    <div class="custom-option" data-value="RFLifting" onclick="selectOption(this)">✨ РФ Лифтинг</div>
-                    <div class="custom-option" data-value="Chistka" onclick="selectOption(this)">✨ Чистка лица</div>
-                    <div class="custom-option" data-value="LaserRemove" onclick="selectOption(this)">✨ Удаление лазером</div>
-                </div>
+        <label>Выберите услугу:</label>
+        <div class="custom-select-wrapper">
+            <div class="custom-select-trigger" onclick="document.getElementById('opts').classList.toggle('show')">
+                <span id="selectedLabel">Коктейль Инфинити</span>
             </div>
-            <input type="hidden" id="service-value" value="Infinity">
+            <div class="custom-options" id="opts">
+                <div class="custom-option" onclick="select('Infinity', 'Коктейль Инфинити')">Коктейль Инфинити</div>
+                <div class="custom-option" onclick="select('Renaissance', 'Коктейль Ренессанс')">Коктейль Ренессанс</div>
+                <div class="custom-option" onclick="select('Mono', 'Моно нити')">Моно нити</div>
+                <div class="custom-option" onclick="select('Screw', 'Скрю нити')">Скрю нити</div>
+            </div>
         </div>
-
-        <div class="form-group">
-            <label for="new-price">Новая цена:</label>
-            <input type="text" id="new-price" placeholder="Например: 150$ или 1.200.000 сум">
-        </div>
-        <button onclick="savePrice()">Применить новую цену</button>
+        <input type="hidden" id="service-value" value="Infinity">
     </div>
 
-    <div class="card">
+    <div class="card broadcast-card">
         <h2>Массовая рассылка</h2>
-        <div class="form-group">
-            <label for="broadcast-text">Текст уведомления (HTML):</label>
-            <textarea id="broadcast-text" rows="4" placeholder="Введите текст акции для клиентов..."></textarea>
-        </div>
-    </div>
-
-    <div class="bottom-action-container">
-        <button class="broadcast-btn" onclick="startBroadcast()">Запустить рассылку по базе</button>
+        <textarea id="broadcast-text" style="width:100%; background:black; color:white;"></textarea>
+        <button onclick="startBroadcast()">Запустить</button>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        // Переносим список в конец body при старте, чтобы сломать контексты наложения
-        const optionsMenu = document.getElementById('customOptions');
-        document.body.appendChild(optionsMenu);
-
-        function toggleSelect(e) {
-            e.stopPropagation();
-            const wrapper = document.getElementById('serviceSelectWrapper');
-            const trigger = e.currentTarget;
-            
-            const isOpen = wrapper.classList.toggle('open-global');
-            
-            if (isOpen) {
-                const rect = trigger.getBoundingClientRect();
-                optionsMenu.style.top = (rect.bottom + window.scrollY) + 'px';
-                optionsMenu.style.left = (rect.left + window.scrollX) + 'px';
-                optionsMenu.style.width = rect.width + 'px';
-            }
-        }
-
-        function selectOption(element) {
-            const value = element.getAttribute('data-value');
-            const text = element.innerText;
+        function select(val, text) {
             document.getElementById('selectedLabel').innerText = text;
-            document.getElementById('service-value').value = value;
-            document.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
-            element.classList.add('selected');
-            document.getElementById('serviceSelectWrapper').classList.remove('open-global');
+            document.getElementById('service-value').value = val;
+            document.getElementById('opts').classList.remove('show');
         }
-
-        window.addEventListener('click', function() {
-            document.getElementById('serviceSelectWrapper').classList.remove('open-global');
-        });
-
-        function savePrice() {
-            const service = document.getElementById('service-value').value;
-            const price = document.getElementById('new-price').value;
-            if (!price) { alert('Пожалуйста, введите цену!'); return; }
-            tg.sendData(JSON.stringify({ action: "web_edit_price", service: service, price: price }));
-            tg.close();
-        }
-
         function startBroadcast() {
             const text = document.getElementById('broadcast-text').value;
-            if (!text) { alert('Введите текст для рассылки!'); return; }
-            tg.sendData(JSON.stringify({ action: "web_broadcast", text: text }));
-            tg.close();
+            window.Telegram.WebApp.sendData(JSON.stringify({action: "web_broadcast", text: text}));
         }
     </script>
 </body>
