@@ -18,7 +18,7 @@
             background-attachment: fixed;
             color: #ffffff;
             margin: 0;
-            padding: 20px 15px 140px 15px; /* Увеличили отступ, чтобы контент не перекрывался кнопкой */
+            padding: 20px 15px 40px 15px;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
@@ -29,9 +29,9 @@
         }
 
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 8px rgba(136, 51, 255, 0.3); }
-            50% { box-shadow: 0 0 18px rgba(136, 51, 255, 0.6); }
-            100% { box-shadow: 0 0 8px rgba(136, 51, 255, 0.3); }
+            0% { box-shadow: 0 0 8px rgba(136, 51, 255, 0.2); }
+            50% { box-shadow: 0 0 18px rgba(136, 51, 255, 0.4); }
+            100% { box-shadow: 0 0 8px rgba(136, 51, 255, 0.2); }
         }
 
         .app-header {
@@ -143,7 +143,7 @@
             stroke: #cdb0ff;
         }
 
-        /* РЕШЕНИЕ ПРОБЛЕМЫ: Выпадающий список теперь ПОВЕРХ вкладки рассылки (z-index: 99999) */
+        /* Список теперь открывается поверх всего и не конфликтует с нижней кнопкой */
         .custom-options {
             position: absolute;
             display: block;
@@ -151,12 +151,12 @@
             left: 0;
             right: 0;
             margin-top: 6px;
-            background: #150f22; /* Плотный темный фон, чтобы ничего не просвечивало */
+            background: #150f22;
             border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
-            z-index: 99999; /* Выше, чем фиксированная кнопка рассылки */
-            max-height: 280px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            max-height: 260px;
             overflow-y: auto;
             opacity: 0;
             visibility: hidden;
@@ -176,7 +176,7 @@
             transition: all 0.15s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .custom-option:hover {
             background: rgba(157, 82, 255, 0.25);
@@ -197,7 +197,6 @@
             border-radius: 10px;
         }
 
-        /* Стандартные кнопки */
         button {
             width: 100%;
             background: rgba(157, 82, 255, 0.15);
@@ -219,30 +218,21 @@
             animation: pulseGlow 3s infinite;
         }
         button:active {
-            transform: scale(0.97);
+            transform: scale(0.98);
             background: rgba(157, 82, 255, 0.3);
             border-color: rgba(157, 82, 255, 0.6);
         }
 
-        /* ФИКСИРОВАННАЯ НИЖНЯЯ ВКЛАДКА (z-index меньше, чем у списка меню) */
-        .bottom-action-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 15px 30px 15px;
-            background: linear-gradient(to top, #0b0713 85%, transparent);
-            z-index: 1000; /* Меньше, чем 99999 у custom-options */
-        }
         .broadcast-btn {
             background: rgba(239, 68, 68, 0.12);
             border: 1px solid rgba(239, 68, 68, 0.35);
             animation: none;
+            margin-top: 10px;
         }
         .broadcast-btn:active {
             background: rgba(239, 68, 68, 0.25);
             border-color: rgba(239, 68, 68, 0.5);
-            transform: scale(0.97);
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -283,15 +273,14 @@
                     <div class="custom-option" data-value="InfHair" onclick="selectOption(this)">🍹 Коктейль Инфинити Hair</div>
                     <div class="custom-option" data-value="InfHairPlus" onclick="selectOption(this)">🍹 Коктейль Инфинити Hair Плюс</div>
                     
+                    <div class="custom-option" data-value="MesoFace" onclick="selectOption(this)">💉 Мезотерапия лица</div>
+                    <div class="custom-option" data-value="MesoNiti" onclick="selectOption(this)">🧵 Мезонити (Тредлифтинг)</div>
+                    <div class="custom-option" data-value="Aptos" onclick="selectOption(this)">🧵 Нитевой лифтинг Aptos</div>
                     <div class="custom-option" data-value="Botulo" onclick="selectOption(this)">✨ Ботулинотерапия</div>
                     <div class="custom-option" data-value="Lips" onclick="selectOption(this)">✨ Губы (контур)</div>
                     <div class="custom-option" data-value="RFLifting" onclick="selectOption(this)">✨ РФ Лифтинг</div>
                     <div class="custom-option" data-value="Chistka" onclick="selectOption(this)">✨ Чистка лица</div>
                     <div class="custom-option" data-value="LaserRemove" onclick="selectOption(this)">✨ Удаление лазером</div>
-
-                    <div class="custom-option" data-value="Niti_1" onclick="selectOption(this)">🧵 Твои Нити Вариант 1</div>
-                    <div class="custom-option" data-value="Niti_2" onclick="selectOption(this)">🧵 Твои Нити Вариант 2</div>
-                    <div class="custom-option" data-value="Inject_1" onclick="selectOption(this)">💉 Твои Инъекции Вариант 1</div>
                 </div>
             </div>
             <input type="hidden" id="service-value" value="Infinity">
@@ -319,12 +308,9 @@
             Массовая рассылка
         </h2>
         <div class="form-group">
-            <label for="broadcast-text">Текст уведомления (HTML):</label>
-            <textarea id="broadcast-text" rows="4" placeholder="Введите текст акции для клиентов..."></textarea>
+            <label for="broadcast-text">Текст уведомления (HTML поддерживается):</label>
+            <textarea id="broadcast-text" rows="4" placeholder="Введите текст акции или новости для клиентов..."></textarea>
         </div>
-    </div>
-
-    <div class="bottom-action-container">
         <button class="broadcast-btn" onclick="startBroadcast()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 21L21 12L1 3V10L11 12L1 14V21Z" fill="#ffffff"/>
