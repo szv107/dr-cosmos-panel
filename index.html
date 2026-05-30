@@ -9,10 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Базовые настройки темы в стиле iOS/Dark Premium */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #0b0713; /* Глубокий ночной фон с фиолетовым отливом */
+            background-color: #0b0713;
             background-image: 
                 radial-gradient(circle at top left, rgba(136, 51, 255, 0.15), transparent 40%),
                 radial-gradient(circle at bottom right, rgba(161, 75, 255, 0.1), transparent 50%);
@@ -24,25 +23,17 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Ключевые анимации появления */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 8px rgba(136, 51, 255, 0.4); }
-            50% { box-shadow: 0 0 20px rgba(136, 51, 255, 0.7); }
-            100% { box-shadow: 0 0 8px rgba(136, 51, 255, 0.4); }
+            0% { box-shadow: 0 0 8px rgba(136, 51, 255, 0.3); }
+            50% { box-shadow: 0 0 18px rgba(136, 51, 255, 0.6); }
+            100% { box-shadow: 0 0 8px rgba(136, 51, 255, 0.3); }
         }
 
-        /* Анимированный заголовок */
         .app-header {
             display: flex;
             align-items: center;
@@ -50,90 +41,175 @@
             gap: 12px;
             margin-bottom: 25px;
             padding: 14px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            animation: fadeInUp 0.5s ease forwards;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            animation: fadeInUp 0.4s ease forwards;
         }
         .app-header-title {
             margin: 0;
-            color: #ffffff;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             letter-spacing: -0.3px;
         }
 
-        /* Стеклянные карточки (Glassmorphism) */
         .card {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 20px;
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 22px;
+            padding: 22px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             opacity: 0;
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        .card:nth-child(2) { animation-delay: 0.15s; }
-        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(2) { animation-delay: 0.1s; }
+        .card:nth-child(3) { animation-delay: 0.2s; }
 
         h2 {
             margin-top: 0;
-            color: #b380ff; /* Мягкий неоновый фиолетовый */
+            color: #cdb0ff;
             font-size: 16px;
             font-weight: 600;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             padding-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 10px;
-            letter-spacing: -0.2px;
         }
 
-        /* Поля ввода и выпадающие списки */
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
+            position: relative;
         }
         label {
             display: block;
             font-size: 12px;
             font-weight: 500;
-            margin-bottom: 6px;
-            color: rgba(255, 255, 255, 0.6);
-            letter-spacing: 0.2px;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.5);
         }
-        select, input, textarea {
+
+        /* Текстовые инпуты */
+        input, textarea {
             width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.2);
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.25);
             color: #ffffff;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
-        select:focus, input:focus, textarea:focus {
-            border-color: #a14bff;
-            background: rgba(136, 51, 255, 0.05);
+        input:focus, textarea:focus {
+            border-color: #9d52ff;
+            background: rgba(136, 51, 255, 0.03);
             outline: none;
-            box-shadow: 0 0 12px rgba(161, 75, 255, 0.2);
+            box-shadow: 0 0 15px rgba(157, 82, 255, 0.25);
         }
 
-        /* Блюрные футуристичные кнопки */
+        /* КАСТОМНЫЙ КРАСИВЫЙ СЕЛЕКТ */
+        .custom-select-wrapper {
+            position: relative;
+            user-select: none;
+        }
+        .custom-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.25);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .custom-select-wrapper.open .custom-select-trigger {
+            border-color: #9d52ff;
+            box-shadow: 0 0 15px rgba(157, 82, 255, 0.25);
+        }
+        .arrow-icon {
+            transition: transform 0.25s ease;
+            stroke: rgba(255,255,255,0.6);
+        }
+        .custom-select-wrapper.open .arrow-icon {
+            transform: rotate(180deg);
+            stroke: #cdb0ff;
+        }
+
+        /* Выпадающий стеклянный список */
+        .custom-options {
+            position: absolute;
+            display: block;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 6px;
+            background: rgba(20, 14, 32, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            z-index: 99;
+            max-height: 240px;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.25s cubic-bezier(0.1, 1, 0.1, 1);
+        }
+        .custom-select-wrapper.open .custom-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .custom-option {
+            padding: 12px 14px;
+            cursor: pointer;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.85);
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .custom-option:hover {
+            background: rgba(157, 82, 255, 0.2);
+            color: #ffffff;
+            padding-left: 18px; /* Небольшая динамика при наведении */
+        }
+        .custom-option.selected {
+            background: rgba(157, 82, 255, 0.3);
+            color: #cdb0ff;
+            font-weight: 500;
+        }
+
+        /* Кастомизация скроллбара списка */
+        .custom-options::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-options::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+
+        /* Интерактивные кнопки с размытием */
         button {
             width: 100%;
-            background: rgba(136, 51, 255, 0.2);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(157, 82, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: #ffffff;
-            border: 1px solid rgba(161, 75, 255, 0.4);
-            padding: 14px;
+            border: 1px solid rgba(157, 82, 255, 0.35);
+            padding: 15px;
             border-radius: 14px;
             font-family: 'Inter', sans-serif;
             font-size: 15px;
@@ -148,35 +224,32 @@
         }
         button:active {
             transform: scale(0.97);
-            background: rgba(136, 51, 255, 0.4);
-            box-shadow: 0 0 15px rgba(136, 51, 255, 0.6);
+            background: rgba(157, 82, 255, 0.3);
+            border-color: rgba(157, 82, 255, 0.6);
         }
 
-        /* Блюрная кнопка опасного действия (рассылка) */
         .broadcast-btn {
-            background: rgba(229, 57, 53, 0.15);
-            border: 1px solid rgba(244, 67, 54, 0.4);
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.35);
             animation: none;
-            box-shadow: 0 4px 15px rgba(229, 57, 53, 0.1);
         }
         .broadcast-btn:active {
-            background: rgba(229, 57, 53, 0.35);
-            box-shadow: 0 0 15px rgba(229, 57, 53, 0.5);
+            background: rgba(239, 68, 68, 0.25);
+            border-color: rgba(239, 68, 68, 0.5);
+            transform: scale(0.97);
         }
 
-        /* Контейнер для фиксации кнопки рассылки внизу экрана */
         .bottom-action-container {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             padding: 20px 15px;
-            background: linear-gradient(to top, #0b0713 80%, transparent);
+            background: linear-gradient(to top, #0b0713 75%, transparent);
             z-index: 10;
         }
         
         .btn-icon {
-            display: inline-block;
             flex-shrink: 0;
         }
     </style>
@@ -184,68 +257,79 @@
 <body>
 
     <div class="app-header">
-        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2 17L12 22L22 17" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2 12L12 17L22 12" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#cdb0ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 17L12 22L22 17" stroke="#cdb0ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 12L12 17L22 12" stroke="#cdb0ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <p class="app-header-title">Управление Студией Dr.Cosmos</p>
     </div>
 
     <div class="card">
         <h2>
-            <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 6V18" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9.83 8C8.83 8.32 8.12 9.04 8 10C7.88 10.96 8.35 11.66 9.35 12.01L12.01 12.98C13.01 13.33 13.48 14.03 13.36 14.99C13.24 15.95 12.53 16.67 11.53 16.99" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="#cdb0ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 6V18" stroke="#cdb0ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9.83 8C8.83 8.32 8.12 9.04 8 10C7.88 10.96 8.35 11.66 9.35 12.01L12.01 12.98C13.01 13.33 13.48 14.03 13.36 14.99C13.24 15.95 12.53 16.67 11.53 16.99" stroke="#cdb0ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             Управление ценами
         </h2>
+        
         <div class="form-group">
-            <label for="service-select">Выберите услугу:</label>
-            <select id="service-select">
-                <option value="Infinity">🍹 Коктейль Инфинити</option>
-                <option value="Renaissance">🍹 Коктейль Ренессанс</option>
-                <option value="RenaissancePlus">🍹 Коктейль Ренессанс Плюс</option>
-                <option value="InfHair">🍹 Коктейль Инфинити Hair</option>
-                <option value="InfHairPlus">🍹 Коктейль Инфинити Hair Плюс</option>
-                <option value="RFLifting">✨ РФ Лифтинг</option>
-                <option value="Chistka">✨ Чистка лица</option>
-                <option value="Botulo">✨ Ботулинотерапия</option>
-                <option value="Lips">✨ Губы (контур)</option>
-                <option value="LaserRemove">✨ Удаление лазером</option>
-            </select>
+            <label>Выберите услугу:</label>
+            <div class="custom-select-wrapper" id="serviceSelectWrapper">
+                <div class="custom-select-trigger" onclick="toggleSelect()">
+                    <span id="selectedLabel">🍹 Коктейль Инфинити</span>
+                    <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="custom-options">
+                    <div class="custom-option selected" data-value="Infinity" onclick="selectOption(this)">🍹 Коктейль Инфинити</div>
+                    <div class="custom-option" data-value="Renaissance" onclick="selectOption(this)">🍹 Коктейль Ренессанс</div>
+                    <div class="custom-option" data-value="RenaissancePlus" onclick="selectOption(this)">🍹 Коктейль Ренессанс Плюс</div>
+                    <div class="custom-option" data-value="InfHair" onclick="selectOption(this)">🍹 Коктейль Инфинити Hair</div>
+                    <div class="custom-option" data-value="InfHairPlus" onclick="selectOption(this)">🍹 Коктейль Инфинити Hair Плюс</div>
+                    <div class="custom-option" data-value="RFLifting" onclick="selectOption(this)">✨ РФ Лифтинг</div>
+                    <div class="custom-option" data-value="Chistka" onclick="selectOption(this)">✨ Чистка лица</div>
+                    <div class="custom-option" data-value="Botulo" onclick="selectOption(this)">✨ Ботулинотерапия</div>
+                    <div class="custom-option" data-value="Lips" onclick="selectOption(this)">✨ Губы (контур)</div>
+                    <div class="custom-option" data-value="LaserRemove" onclick="selectOption(this)">✨ Удаление лазером</div>
+                </div>
+            </div>
+            <input type="hidden" id="service-value" value="Infinity">
         </div>
+
         <div class="form-group">
             <label for="new-price">Новая цена:</label>
             <input type="text" id="new-price" placeholder="Например: 130$ или 700.000 сум">
         </div>
         <button onclick="savePrice()">
-            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M13 3L3 13L13 23V3Z" fill="#ffffff"/>
                 <path d="M11 1L21 11L11 21V1Z" fill="#ffffff"/>
             </svg>
-            Применить новую цену
+            Применить цену
         </button>
     </div>
 
     <div class="card">
         <h2>
-            <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M7 11.5L10 14.5L17 7.5" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="#cdb0ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 11.5L10 14.5L17 7.5" stroke="#cdb0ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             Массовая рассылка
         </h2>
         <div class="form-group">
-            <label for="broadcast-text">Текст уведомления (HTML поддерживается):</label>
-            <textarea id="broadcast-text" rows="4" placeholder="Введите текст акции или новости для клиентов..."></textarea>
+            <label for="broadcast-text">Текст уведомления (HTML):</label>
+            <textarea id="broadcast-text" rows="4" placeholder="Введите текст акции для клиентов..."></textarea>
         </div>
     </div>
 
     <div class="bottom-action-container">
         <button class="broadcast-btn" onclick="startBroadcast()">
-            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 21L21 12L1 3V10L11 12L1 14V21Z" fill="#ffffff"/>
             </svg>
             Запустить рассылку по базе
@@ -256,8 +340,37 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // Логика кастомного выпадающего списка
+        function toggleSelect() {
+            document.getElementById('serviceSelectWrapper').classList.toggle('open');
+        }
+
+        function selectOption(element) {
+            const value = element.getAttribute('data-value');
+            const text = element.innerText;
+            
+            // Обновляем отображение и скрытый инпут
+            document.getElementById('selectedLabel').innerText = text;
+            document.getElementById('service-value').value = value;
+            
+            // Убираем класс выбранного у старого элемента и добавляем новому
+            document.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // Закрываем меню
+            document.getElementById('serviceSelectWrapper').classList.remove('open');
+        }
+
+        // Закрытие списка, если кликнули вне его области
+        window.addEventListener('click', function(e) {
+            const select = document.getElementById('serviceSelectWrapper');
+            if (!select.contains(e.target)) {
+                select.classList.remove('open');
+            }
+        });
+
         function savePrice() {
-            const service = document.getElementById('service-select').value;
+            const service = document.getElementById('service-value').value;
             const price = document.getElementById('new-price').value;
 
             if (!price) {
@@ -265,13 +378,11 @@
                 return;
             }
 
-            const data = {
+            tg.sendData(JSON.stringify({
                 action: "web_edit_price",
                 service: service,
                 price: price
-            };
-
-            tg.sendData(JSON.stringify(data));
+            }));
             tg.close();
         }
 
@@ -283,12 +394,10 @@
                 return;
             }
 
-            const data = {
+            tg.sendData(JSON.stringify({
                 action: "web_broadcast",
                 text: text
-            };
-
-            tg.sendData(JSON.stringify(data));
+            }));
             tg.close();
         }
     </script>
