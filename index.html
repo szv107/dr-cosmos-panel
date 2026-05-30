@@ -4,136 +4,190 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dr.Cosmos WebApp Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Общие стили для темной темы */
+        /* Базовые настройки темы в стиле iOS/Dark Premium */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color, #121212); /* Глубокий темный фон */
-            color: var(--tg-theme-text-color, #ffffff);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #0b0713; /* Глубокий ночной фон с фиолетовым отливом */
+            background-image: 
+                radial-gradient(circle at top left, rgba(136, 51, 255, 0.15), transparent 40%),
+                radial-gradient(circle at bottom right, rgba(161, 75, 255, 0.1), transparent 50%);
+            background-attachment: fixed;
+            color: #ffffff;
             margin: 0;
-            padding: 15px;
-            padding-bottom: 80px; /* Отступ для нижней кнопки */
+            padding: 20px 15px 100px 15px;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Заголовок с логотипом */
+        /* Ключевые анимации появления */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 8px rgba(136, 51, 255, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(136, 51, 255, 0.7); }
+            100% { box-shadow: 0 0 8px rgba(136, 51, 255, 0.4); }
+        }
+
+        /* Анимированный заголовок */
         .app-header {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: linear-gradient(135deg, rgba(82, 0, 150, 0.2) 0%, rgba(121, 0, 191, 0.1) 100%);
-            border-radius: 12px;
-            border: 1px solid rgba(82, 0, 150, 0.3);
+            gap: 12px;
+            margin-bottom: 25px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: fadeInUp 0.5s ease forwards;
         }
         .app-header-title {
             margin: 0;
             color: #ffffff;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
         }
 
-        /* Карточка с закругленными углами */
+        /* Стеклянные карточки (Glassmorphism) */
         .card {
-            background: rgba(255, 255, 255, 0.05); /* Полупрозрачный темный фон */
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            opacity: 0;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+        .card:nth-child(2) { animation-delay: 0.15s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
 
         h2 {
             margin-top: 0;
-            color: var(--tg-theme-button-color, #8833ff); /* Насыщенный фиолетовый */
+            color: #b380ff; /* Мягкий неоновый фиолетовый */
             font-size: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 8px;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            letter-spacing: -0.2px;
         }
 
-        /* Группа формы */
+        /* Поля ввода и выпадающие списки */
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
         label {
             display: block;
             font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 4px;
-            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.2px;
         }
         select, input, textarea {
             width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255, 255, 255, 0.03); /* Очень темный фон ввода */
-            color: var(--tg-theme-text-color, #ffffff);
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: #ffffff;
             box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
-            transition: border-color 0.2s;
+            transition: all 0.3s ease;
         }
         select:focus, input:focus, textarea:focus {
-            border-color: #8833ff;
+            border-color: #a14bff;
+            background: rgba(136, 51, 255, 0.05);
             outline: none;
+            box-shadow: 0 0 12px rgba(161, 75, 255, 0.2);
         }
 
-        /* Кнопки */
+        /* Блюрные футуристичные кнопки */
         button {
             width: 100%;
-            background: var(--tg-theme-button-color, linear-gradient(135deg, #7e1fff 0%, #a14bff 100%)); /* Фиолетовый градиент */
-            color: var(--tg-theme-button-text-color, #fff);
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
+            background: rgba(136, 51, 255, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #ffffff;
+            border: 1px solid rgba(161, 75, 255, 0.4);
+            padding: 14px;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s;
-            box-shadow: 0 2px 4px rgba(126, 31, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: pulseGlow 3s infinite;
         }
-        button:hover {
-            opacity: 0.9;
+        button:active {
+            transform: scale(0.97);
+            background: rgba(136, 51, 255, 0.4);
+            box-shadow: 0 0 15px rgba(136, 51, 255, 0.6);
         }
 
-        /* Кнопка рассылки: красный фон */
+        /* Блюрная кнопка опасного действия (рассылка) */
         .broadcast-btn {
-            background: linear-gradient(135deg, #e53935 0%, #f44336 100%);
-            box-shadow: 0 2px 4px rgba(229, 57, 53, 0.3);
-            margin-top: 15px;
+            background: rgba(229, 57, 53, 0.15);
+            border: 1px solid rgba(244, 67, 54, 0.4);
+            animation: none;
+            box-shadow: 0 4px 15px rgba(229, 57, 53, 0.1);
+        }
+        .broadcast-btn:active {
+            background: rgba(229, 57, 53, 0.35);
+            box-shadow: 0 0 15px rgba(229, 57, 53, 0.5);
         }
 
-        /* Стили для нижней фиксированной кнопки */
+        /* Контейнер для фиксации кнопки рассылки внизу экрана */
         .bottom-action-container {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 15px;
-            background-color: #121212;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 20px 15px;
+            background: linear-gradient(to top, #0b0713 80%, transparent);
             z-index: 10;
-            box-shadow: 0 -4px 6px rgba(0,0,0,0.1);
         }
         
-        /* Иконки */
         .btn-icon {
-            font-size: 18px;
+            display: inline-block;
+            flex-shrink: 0;
         }
     </style>
 </head>
 <body>
 
     <div class="app-header">
-        <svg class="btn-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2 17L12 22L22 17" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2 12L12 17L22 12" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 17L12 22L22 17" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 12L12 17L22 12" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <p class="app-header-title">Управление Студией Dr.Cosmos</p>
     </div>
@@ -141,9 +195,9 @@
     <div class="card">
         <h2>
             <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="#8833ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 6V18" stroke="#8833ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9.83 8C8.83 8.32 8.12 9.04 8 10C7.88 10.96 8.35 11.66 9.35 12.01L12.01 12.98C13.01 13.33 13.48 14.03 13.36 14.99C13.24 15.95 12.53 16.67 11.53 16.99" stroke="#8833ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 6V18" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9.83 8C8.83 8.32 8.12 9.04 8 10C7.88 10.96 8.35 11.66 9.35 12.01L12.01 12.98C13.01 13.33 13.48 14.03 13.36 14.99C13.24 15.95 12.53 16.67 11.53 16.99" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             Управление ценами
         </h2>
@@ -178,8 +232,8 @@
     <div class="card">
         <h2>
             <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="#8833ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M7 11.5L10 14.5L17 7.5" stroke="#8833ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 11.5L10 14.5L17 7.5" stroke="#b380ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             Массовая рассылка
         </h2>
@@ -199,9 +253,8 @@
     </div>
 
     <script>
-        // Инициализируем Telegram WebApp API
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем приложение на весь экран телефона
+        tg.expand();
 
         function savePrice() {
             const service = document.getElementById('service-select').value;
@@ -212,16 +265,14 @@
                 return;
             }
 
-            // Упаковываем данные в JSON формат
             const data = {
                 action: "web_edit_price",
                 service: service,
                 price: price
             };
 
-            // Отправляем данные обратно боту
             tg.sendData(JSON.stringify(data));
-            tg.close(); // Закрываем WebApp после отправки
+            tg.close();
         }
 
         function startBroadcast() {
