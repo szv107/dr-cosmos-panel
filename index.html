@@ -18,14 +18,9 @@
             background-attachment: fixed;
             color: #ffffff;
             margin: 0;
-            padding: 20px 15px 120px 15px; /* Запас под кнопку рассылки */
+            padding: 20px 15px 130px 15px;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .app-header {
@@ -40,7 +35,6 @@
             -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.06);
-            animation: fadeInUp 0.4s ease forwards;
         }
         .app-header-title {
             margin: 0;
@@ -57,7 +51,6 @@
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.07);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            animation: fadeInUp 0.5s ease forwards;
         }
 
         h2 {
@@ -101,7 +94,6 @@
             box-shadow: 0 0 15px rgba(157, 82, 255, 0.25);
         }
 
-        /* КОМПОНЕНТ СЕЛЕКТА */
         .custom-select-wrapper {
             position: relative;
         }
@@ -127,26 +119,23 @@
             transform: rotate(180deg);
         }
 
-        /* ГЛАВНОЕ ИСПРАВЛЕНИЕ: Выпадающее меню ТЕПЕРЬ НАД РАССЫЛКОЙ (z-index 999999) */
+        /* ТЕПЕРЬ СПИСОК СТОИТ В BODY И ПЕРЕКРЫВАЕТ ВСЁ НА СВЕТЕ */
         .custom-options {
             position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            margin-top: 6px;
-            background: #1a1429; /* Плотный темный фон */
+            background: #161124; /* Плотный не прозрачный фон */
             border-radius: 16px;
-            border: 1px solid rgba(157, 82, 255, 0.4);
+            border: 1px solid rgba(157, 82, 255, 0.5);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
-            z-index: 999999 !important; /* Самый высокий приоритет */
-            max-height: 250px;
+            z-index: 999999999 !important; /* Максимальный приоритет */
+            max-height: 240px;
             overflow-y: auto;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-8px);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+            box-sizing: border-box;
         }
-        .custom-select-wrapper.open .custom-options {
+        .custom-select-wrapper.open-global .custom-options {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
@@ -162,7 +151,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
         .custom-option:hover {
-            background: rgba(157, 82, 255, 0.3);
+            background: rgba(157, 82, 255, 0.25);
             color: #ffffff;
         }
         .custom-option.selected {
@@ -197,10 +186,8 @@
         }
         button:active {
             transform: scale(0.97);
-            background: rgba(157, 82, 255, 0.35);
         }
 
-        /* НИЖНЯЯ ПАНЕЛЬ РАССЫЛКИ (z-index ниже выпадающего списка) */
         .bottom-action-container {
             position: fixed;
             bottom: 0;
@@ -208,7 +195,7 @@
             right: 0;
             padding: 20px 15px 30px 15px;
             background: linear-gradient(to top, #0b0713 85%, transparent);
-            z-index: 1000; /* Меньше чем у списка услуг */
+            z-index: 1000;
         }
         .broadcast-btn {
             background: rgba(239, 68, 68, 0.15);
@@ -236,6 +223,7 @@
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </div>
+                
                 <div class="custom-options" id="customOptions">
                     <div class="custom-option selected" data-value="Infinity" onclick="selectOption(this)">🍹 Коктейль Инфинити</div>
                     <div class="custom-option" data-value="Renaissance" onclick="selectOption(this)">🍹 Коктейль Ренессанс</div>
@@ -281,9 +269,23 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        // Переносим список в конец body при старте, чтобы сломать контексты наложения
+        const optionsMenu = document.getElementById('customOptions');
+        document.body.appendChild(optionsMenu);
+
         function toggleSelect(e) {
             e.stopPropagation();
-            document.getElementById('serviceSelectWrapper').classList.toggle('open');
+            const wrapper = document.getElementById('serviceSelectWrapper');
+            const trigger = e.currentTarget;
+            
+            const isOpen = wrapper.classList.toggle('open-global');
+            
+            if (isOpen) {
+                const rect = trigger.getBoundingClientRect();
+                optionsMenu.style.top = (rect.bottom + window.scrollY) + 'px';
+                optionsMenu.style.left = (rect.left + window.scrollX) + 'px';
+                optionsMenu.style.width = rect.width + 'px';
+            }
         }
 
         function selectOption(element) {
@@ -293,11 +295,11 @@
             document.getElementById('service-value').value = value;
             document.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
             element.classList.add('selected');
-            document.getElementById('serviceSelectWrapper').classList.remove('open');
+            document.getElementById('serviceSelectWrapper').classList.remove('open-global');
         }
 
         window.addEventListener('click', function() {
-            document.getElementById('serviceSelectWrapper').classList.remove('open');
+            document.getElementById('serviceSelectWrapper').classList.remove('open-global');
         });
 
         function savePrice() {
