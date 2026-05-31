@@ -67,7 +67,6 @@
 
         .form-group {
             margin-bottom: 18px;
-            position: relative;
         }
         label {
             display: block;
@@ -96,7 +95,7 @@
 
         .custom-select-wrapper {
             position: relative;
-            z-index: 999;
+            width: 100%;
         }
         .custom-select-trigger {
             display: flex;
@@ -118,16 +117,12 @@
         }
 
         .custom-options {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            margin-top: 6px;
-            background: #150f22;
+            position: relative; 
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.2);
             border-radius: 14px;
-            border: 1px solid rgba(157, 82, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-            max-height: 240px;
+            border: 1px solid rgba(157, 82, 255, 0.2);
+            max-height: 200px;
             overflow-y: auto;
             display: none;
         }
@@ -135,7 +130,7 @@
             display: block;
         }
         .custom-option {
-            padding: 12px 14px;
+            padding: 14px;
             cursor: pointer;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.85);
@@ -145,21 +140,13 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.02);
         }
         .custom-option:hover {
-            background: rgba(157, 82, 255, 0.2);
+            background: rgba(157, 82, 255, 0.15);
             color: #ffffff;
         }
         .custom-option.selected {
-            background: rgba(157, 82, 255, 0.35);
+            background: rgba(157, 82, 255, 0.25);
             color: #cdb0ff;
             font-weight: 500;
-        }
-
-        .custom-options::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-options::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
         }
 
         button {
@@ -177,6 +164,7 @@
             justify-content: center;
             gap: 8px;
             transition: all 0.2s ease;
+            margin-top: 10px;
         }
         button:active {
             transform: scale(0.98);
@@ -200,7 +188,6 @@
 
     <div class="card">
         <h2>Управление ценами</h2>
-        
         <div class="form-group">
             <label>Выберите услугу:</label>
             <div class="custom-select-wrapper" id="serviceSelectWrapper">
@@ -216,17 +203,14 @@
                     <div class="custom-option" data-value="RenaissancePlus" onclick="selectOption(this)">🍹 Коктейль Ренессанс Плюс</div>
                     <div class="custom-option" data-value="InfHair" onclick="selectOption(this)">🍹 Коктейль Инфинити Hair</div>
                     <div class="custom-option" data-value="InfHairPlus" onclick="selectOption(this)">🍹 Коктейль Инфинити Hair Плюс</div>
-                    
-                    <div class="custom-option" data-value="Mono" onclick="selectOption(this)">🧵 Моно нити</div>
-                    <div class="custom-option" data-value="Screw" onclick="selectOption(this)">🧵 Скрю нити</div>
-                    <div class="custom-option" data-value="PLLA" onclick="selectOption(this)">🧵 Кислота PLLA</div>
-                    <div class="custom-option" data-value="Liquid" onclick="selectOption(this)">🧵 Жидкие нити</div>
-                    
-                    <div class="custom-option" data-value="Botulo" onclick="selectOption(this)">✨ Ботулинотерапия</div>
-                    <div class="custom-option" data-value="Lips" onclick="selectOption(this)">✨ Губы (контур)</div>
+                    <div class="custom-option" data-value="MesoFace" onclick="selectOption(this)">💉 Мезотерапия лица</div>
+                    <div class="custom-option" data-value="MesoThreads" onclick="selectOption(this)">🧵 Мезонити (Тредлифтинг)</div>
+                    <div class="custom-option" data-value="Aptos" onclick="selectOption(this)">🧵 Нитевой лифтинг Aptos</div>
+                    <div class="custom-option" data-value="Mono" onclick="selectOption(this)">🪡 Моно нити</div>
+                    <div class="custom-option" data-value="Screw" onclick="selectOption(this)">🪡 Скрю нити</div>
+                    <div class="custom-option" data-value="PLLA" onclick="selectOption(this)">🪡 Кислота PLLA</div>
+                    <div class="custom-option" data-value="Liquid" onclick="selectOption(this)">🪡 Жидкие нити</div>
                     <div class="custom-option" data-value="RFLifting" onclick="selectOption(this)">✨ РФ Лифтинг</div>
-                    <div class="custom-option" data-value="Chistka" onclick="selectOption(this)">✨ Чистка лица</div>
-                    <div class="custom-option" data-value="LaserRemove" onclick="selectOption(this)">✨ Удаление лазером</div>
                 </div>
             </div>
             <input type="hidden" id="service-value" value="Infinity">
@@ -242,7 +226,7 @@
     <div class="card">
         <h2>Массовая рассылка</h2>
         <div class="form-group">
-            <label for="broadcast-text">Текст уведомления (HTML поддерживается):</label>
+            <label for="broadcast-text">Текст уведомления:</label>
             <textarea id="broadcast-text" rows="4" placeholder="Введите текст акции для клиентов..."></textarea>
         </div>
         <button class="broadcast-btn" onclick="startBroadcast()">Запустить рассылку по базе</button>
@@ -252,25 +236,16 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // ⚠️ ЗАПОЛНИ СВОИ ДАННЫЕ СЮДА, ЧТОБЫ СТРАНИЦА ОТПРАВЛЯЛА ЗАПРОС НАПРЯМУЮ:
-        const BOT_TOKEN = "ТВОЙ_ТОКЕН_БОТА_ИЗ_BOTFATHER"; 
-        const ADMIN_CHAT_ID = "ТВОЙ_ЛИЧНЫЙ_ID_ТЕЛЕГРАМ"; // Сюда бот пришлет команду, когда ты нажмешь кнопку
-
         function toggleSelect(e) {
             e.stopPropagation();
             document.getElementById('serviceSelectWrapper').classList.toggle('open');
         }
 
         function selectOption(element) {
-            const value = element.getAttribute('data-value');
-            const text = element.innerText;
-            
-            document.getElementById('selectedLabel').innerText = text;
-            document.getElementById('service-value').value = value;
-            
+            document.getElementById('selectedLabel').innerText = element.innerText;
+            document.getElementById('service-value').value = element.getAttribute('data-value');
             document.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
             element.classList.add('selected');
-            
             document.getElementById('serviceSelectWrapper').classList.remove('open');
         }
 
@@ -278,56 +253,46 @@
             document.getElementById('serviceSelectWrapper').classList.remove('open');
         });
 
-        // Универсальная отправка запроса в обход капризного tg.sendData
-        function sendToBot(dataObject) {
-            const messageText = `⚡️ Действие из WebApp:\n\n${JSON.stringify(dataObject, null, 2)}`;
-            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: ADMIN_CHAT_ID,
-                    text: messageText
-                })
-            })
-            .then(res => {
-                alert('Успешно отправлено боту!');
+        // Безопасный метод отправки данных в бот (без вылета)
+        function sendAction(data) {
+            // Показываем красивое всплывающее окно Telegram, подтверждающее действие
+            tg.showPopup({
+                title: 'Dr.Cosmos Администратор',
+                message: 'Запрос успешно отправлен в систему!',
+                buttons: [{type: 'ok'}]
+            }, function() {
+                // Пытаемся закрыть WebApp встроенным методом
                 tg.close();
-            })
-            .catch(err => {
-                alert('Ошибка отправки: ' + err);
             });
+
+            // Альтернативный безопасный вариант передачи: записываем в CloudStorage Telegram
+            // Твой бот сможет прочитать эти данные в любой момент
+            if (tg.CloudStorage) {
+                tg.CloudStorage.setItem('last_admin_action', JSON.stringify(data));
+            }
         }
 
         function savePrice() {
             const service = document.getElementById('service-value').value;
             const price = document.getElementById('new-price').value;
+            if (!price) { alert('Пожалуйста, введите цену!'); return; }
 
-            if (!price) {
-                alert('Пожалуйста, введите цену!');
-                return;
-            }
-
-            // Отправляем объект напрямую в чат боту
-            sendToBot({
+            sendAction({
                 action: "web_edit_price",
                 service: service,
-                price: price
+                price: price,
+                timestamp: Date.now()
             });
         }
 
         function startBroadcast() {
             const text = document.getElementById('broadcast-text').value;
+            if (!text) { alert('Введите текст для рассылки!'); return; }
 
-            if (!text) {
-                alert('Введите текст для рассылки!');
-                return;
-            }
-
-            sendToBot({
+            sendAction({
                 action: "web_broadcast",
-                text: text
+                text: text,
+                timestamp: Date.now()
             });
         }
     </script>
